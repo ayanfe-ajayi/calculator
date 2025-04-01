@@ -41,6 +41,7 @@ offButton.addEventListener ("click", offCalculator);
 onOrAcButton.addEventListener("click", onCalculator);
 
 sevenButton.addEventListener ("click", function(){
+    signPresent = false;
     entryDisplay.style.display = "none";
     if (resultDisplay.innerText === "0" || hasRun) {
         resultDisplay.innerText = "7";
@@ -51,6 +52,7 @@ sevenButton.addEventListener ("click", function(){
     hasRun = false;
 });
 eightButton.addEventListener ("click", function(){
+    signPresent = false;
     entryDisplay.style.display = "none";
     if (resultDisplay.innerText === "0" || hasRun) {
         resultDisplay.innerText = "8";
@@ -59,6 +61,7 @@ eightButton.addEventListener ("click", function(){
     hasRun = false;
 });
 nineButton.addEventListener ("click", function(){
+    signPresent = false;
     entryDisplay.style.display = "none";
     (resultDisplay.innerText === "0" || hasRun
     )? 
@@ -67,6 +70,7 @@ nineButton.addEventListener ("click", function(){
     hasRun = false;
 });
 fourButton.addEventListener ("click", function(){
+    signPresent = false;
     entryDisplay.style.display = "none";
     (resultDisplay.innerText === "0" || hasRun)? 
     resultDisplay.innerText = "4" :
@@ -74,6 +78,7 @@ fourButton.addEventListener ("click", function(){
     hasRun = false;
 });
 fiveButton.addEventListener ("click", function(){
+    signPresent = false;
     entryDisplay.style.display = "none";
     (resultDisplay.innerText === "0" || hasRun)? 
     resultDisplay.innerText = "5" :
@@ -81,6 +86,7 @@ fiveButton.addEventListener ("click", function(){
     hasRun = false;
 });
 sixButton.addEventListener ("click", function(){
+    signPresent = false;
     entryDisplay.style.display = "none";
     (resultDisplay.innerText === "0" || hasRun)? 
     resultDisplay.innerText = "6" :
@@ -88,6 +94,7 @@ sixButton.addEventListener ("click", function(){
     hasRun = false;
 });
 oneButton.addEventListener ("click", function(){
+    signPresent = false;
     entryDisplay.style.display = "none";
     (resultDisplay.innerText === "0" || hasRun)? 
     resultDisplay.innerText = "1" :
@@ -95,6 +102,7 @@ oneButton.addEventListener ("click", function(){
     hasRun = false;
 });
 twoButton.addEventListener ("click", function(){
+    signPresent = false;
     entryDisplay.style.display = "none";
     (resultDisplay.innerText === "0" || hasRun)? 
     resultDisplay.innerText = "2" :
@@ -102,6 +110,7 @@ twoButton.addEventListener ("click", function(){
     hasRun = false;
 });
 threeButton.addEventListener ("click", function(){
+    signPresent = false;
     entryDisplay.style.display = "none";
     (resultDisplay.innerText === "0" || hasRun)? 
     resultDisplay.innerText = "3" :
@@ -109,6 +118,7 @@ threeButton.addEventListener ("click", function(){
     hasRun = false;
 });
 zeroButton.addEventListener ("click", function(){
+    signPresent = false;
     entryDisplay.style.display = "none";
     (resultDisplay.innerText === "0" || hasRun)? 
     resultDisplay.innerText = "0" :
@@ -118,27 +128,55 @@ zeroButton.addEventListener ("click", function(){
 
 
 divideButton.addEventListener ("click", function(){
+    if(signPresent === false){
     hasRun = false;
     entryDisplay.style.display = "none";
     resultDisplay.innerText += "÷";
+    signPresent = true;
+}
+else {
+    resultDisplay.innerText = resultDisplay.innerText.slice(0, -1);
+    resultDisplay.innerText += "÷";
+}
 });
 multiplyButton.addEventListener ("click", function(){
+    if(signPresent === false){
     hasRun = false;
     entryDisplay.style.display = "none";
     resultDisplay.innerText += "x";
+    signPresent = true;
+}
+else if (resultDisplay.innerText.slice(-1) === "÷"){ 
+    resultDisplay.innerText = resultDisplay.innerText.slice(0, -1);
+    resultDisplay.innerText += "x";
+}
 });
 subtractButton.addEventListener ("click", function(){
+    if(signPresent === false){
     hasRun = false;
     entryDisplay.style.display = "none";
     (resultDisplay.innerText === "0" || resultDisplay.innerText === "-")?
     resultDisplay.innerText = "-" :
     resultDisplay.innerText += "-";
+    signPresent = true;
+}
+    else if (resultDisplay.innerText.slice(-1) === "+"){ 
+        resultDisplay.innerText = resultDisplay.innerText.slice(0, -1);
+        resultDisplay.innerText += "-";
+}
 });
 addButton.addEventListener ("click", function(){
     hasRun = false;
     entryDisplay.style.display = "none";
     resultDisplay.innerText += "+";
 });
+
+percentButton.addEventListener ("click", function(){
+    hasRun = false;
+    entryDisplay.style.display = "none";
+    resultDisplay.innerText += "%";
+});
+
 pointButton.addEventListener ("click", function(){
     resultDisplay.innerText += ".";
 });
@@ -149,11 +187,13 @@ clearEntryButton.addEventListener("click", function(){
 });
 equalsButton.addEventListener ("click", calculate);
 let hasRun = false;
+let signPresent = false;
 
 function calculate () {
-    resultDisplay.innerText += "x1";
+    resultDisplay.innerText += "*1";
     let expression = resultDisplay.innerText;
-    let result = eval(resultDisplay.innerText.replace(/x|\÷/g,  match => match === 'x' ? '*' : '/'));
+    let result = eval(resultDisplay.innerText.replace(/x|\÷|%/g,  match => {
+         return match === 'x' ? '*' : match === '÷' ? '/' : '/100'}));
     resultDisplay.innerText = result;
     entryDisplay.style.display = "block";
     entryDisplay.innerText = expression.slice(0, -2);
